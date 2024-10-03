@@ -17,7 +17,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.0</version>
+        <version>3.3.4</version>
     </parent>
 
     <repositories>
@@ -92,8 +92,7 @@
 
             <plugin>
                 <groupId>com.vaadin</groupId>
-                <artifactId>vaadin-maven-plugin</artifactId>
-                <version>${vaadin.version}</version>
+                <artifactId>hilla-maven-plugin</artifactId>
                 <executions>
                     <execution>
                         <goals>
@@ -111,10 +110,22 @@
             <id>production</id>
             <build>
                 <plugins>
+                    <!--<plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>process-aot</goal>
+                                </goals>
+                                <phase>compile</phase>
+                            </execution>
+                        </executions>
+                    </plugin>-->
+
                     <plugin>
                         <groupId>com.vaadin</groupId>
-                        <artifactId>vaadin-maven-plugin</artifactId>
-                        <version>${vaadin.version}</version>
+                        <artifactId>hilla-maven-plugin</artifactId>
                         <executions>
                             <execution>
                                 <goals>
