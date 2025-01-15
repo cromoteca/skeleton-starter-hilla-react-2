@@ -11,13 +11,13 @@
 
     <properties>
         <java.version>21</java.version>
-        <vaadin.version>24.5-SNAPSHOT</vaadin.version>
+        <vaadin.version>24.7-SNAPSHOT</vaadin.version>
     </properties>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.4</version>
+        <version>3.4.1</version>
     </parent>
 
     <repositories>
@@ -80,6 +80,20 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.36</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>unpublished-library</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/unpublished-library-1.0.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>
@@ -93,6 +107,7 @@
             <plugin>
                 <groupId>com.vaadin</groupId>
                 <artifactId>hilla-maven-plugin</artifactId>
+                <version>${vaadin.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -126,6 +141,7 @@
                     <plugin>
                         <groupId>com.vaadin</groupId>
                         <artifactId>hilla-maven-plugin</artifactId>
+                        <version>${vaadin.version}</version>
                         <executions>
                             <execution>
                                 <goals>
