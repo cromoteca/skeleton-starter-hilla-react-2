@@ -79,4 +79,39 @@ public class HelloEndpoint {
     public void uploadUser(User user) {
         System.out.format("Uploaded `%s` with avatar `%s`: %d bytes\n", user.name(), user.avatar().getOriginalFilename(), user.avatar().getSize());
     }
+
+    public @NonNull String uppercase(@NonNull String message) {
+        return message.toUpperCase();
+    }
+
+    public record Customer(String name, List<Order> orders) {}
+
+    public record Order(List<String> items, MultipartFile invoice) {}
+
+    public String uploadCustomer(Customer customer) {
+        System.out.format("Uploaded customer `%s` with %d orders\n", customer.name(), customer.orders().size());
+        for (Order order : customer.orders()) {
+            System.out.format("Order with %d items and invoice `%s` with size %d\n",
+                    order.items().size(),
+                    order.invoice().getOriginalFilename(),
+                    order.invoice().getSize());
+        }
+        return "Uploaded customer " + customer.name();
+    }
+
+    public String uploadAvatar(String user, MultipartFile file) {
+        return String.format("The avatar for %s is %d bytes.\n", user, file.getSize());
+    }
+
+    public String overloaded(String a, String b) {
+        return a + b;
+    }
+
+    public int overloaded(int a, int b) {
+        return a;
+    }
+
+    public int overloaded(int a) {
+        return a;
+    }
 }
