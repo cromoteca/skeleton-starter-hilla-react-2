@@ -6,6 +6,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -74,33 +76,17 @@ public class HelloEndpoint {
         System.out.format("Uploaded `%s`: %d bytes\n", filename, data.length);
     }
 
-    public record User(String name, MultipartFile avatar) {}
-
-    public void uploadUser(User user) {
-        System.out.format("Uploaded `%s` with avatar `%s`: %d bytes\n", user.name(), user.avatar().getOriginalFilename(), user.avatar().getSize());
-    }
-
-    public @NonNull String uppercase(@NonNull String message) {
+    public @NonNull
+    String uppercase(@NonNull String message) {
         return message.toUpperCase();
-    }
-
-    public record Customer(String name, List<Order> orders) {}
-
-    public record Order(List<String> items, MultipartFile invoice) {}
-
-    public String uploadCustomer(Customer customer) {
-        System.out.format("Uploaded customer `%s` with %d orders\n", customer.name(), customer.orders().size());
-        for (Order order : customer.orders()) {
-            System.out.format("Order with %d items and invoice `%s` with size %d\n",
-                    order.items().size(),
-                    order.invoice().getOriginalFilename(),
-                    order.invoice().getSize());
-        }
-        return "Uploaded customer " + customer.name();
     }
 
     public String uploadAvatar(String user, MultipartFile file) {
         return String.format("The avatar for %s is %d bytes.\n", user, file.getSize());
+    }
+
+    public String uploadFile(MultipartFile file) {
+        return String.format("ID%d", file.getSize());
     }
 
     public String overloaded(String a, String b) {
@@ -113,5 +99,12 @@ public class HelloEndpoint {
 
     public int overloaded(int a) {
         return a;
+    }
+
+    public record Person(String name, int age) {
+    }
+
+    public Page<Person> list(String filter, Pageable pageable) {
+        return null;
     }
 }

@@ -1,39 +1,41 @@
 import { useSignal } from "@vaadin/hilla-react-signals";
-import { Notification, Upload, UploadBeforeEvent, UploadFile } from "@vaadin/react-components";
+import { Upload, UploadFile, UploadRequestEvent } from "@vaadin/react-components";
 import { HelloEndpoint } from "Frontend/generated/endpoints";
 
-export default function UploadView() {
-    const files = useSignal<UploadFile[]>([]);
+type UploadProps = React.ComponentProps<typeof Upload>;
 
-    const sendToServer = async (e: UploadBeforeEvent) => {
+type WrappedUploadProps = Omit<UploadProps, 'onUploadRequest' | 'files' | 'onFilesChanged'> & {
+    service: (file: File) => Promise<string>;
+    onResponse?: (value: string) => void;
+}
+
+function WrappedUpload({ service, onResponse, ...props }: WrappedUploadProps): JSX.Element {
+    const files = useSignal<UploadFile[]>([]);
+    const sendToServer = async (e: UploadRequestEvent) => {
         e.preventDefault();
         const file = e.detail.file;
         file.uploading = true;
-        const buffer = await file.arrayBuffer();
-        await HelloEndpoint.upload(file.name, [...new Int8Array(buffer)]);
-        Notification.show(`Uploaded ${file.name}`);
-        file.held = false;
-        file.status = "";
-        file.complete = true;
-        files.value = [file, ...files.value];
+        service(file).then(response => {
+            onResponse?.(response);
+            file.held = false;
+            file.status = "";
+            file.complete = true;
+        });
         return false;
     };
 
-    return <div className="flex-wrap gap-m">
-        <Upload
-            files={files.value}
-            onFilesChanged={({ detail: { value } }) => files.value = value}
-            accept="image/*"
-            capture="camera"
-        />
-        <div className="flex p-m gap-m">
-            {files.value.map((file) => (
-                <img
-                    key={file.name}
-                    src={URL.createObjectURL(file)}
-                    style={{ maxWidth: "10rem", maxHeight: "10rem" }}
-                />
-            ))}
-        </div>
-    </div>
+    return <Upload
+        onUploadRequest={sendToServer}
+        files={files.value}
+        onFilesChanged={({ detail: { value } }) => files.value = value}
+        {...props}
+    />;
+}
+
+export default function UploadView() {
+    const msg = useSignal('');
+    return <>
+        <WrappedUpload service={HelloEndpoint.uploadFile} onResponse={value => msg.value = value} />
+        <p>{msg}</p>
+    </>;
 }

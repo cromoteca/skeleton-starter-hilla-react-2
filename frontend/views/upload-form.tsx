@@ -7,7 +7,7 @@ export default function UploadForm({ }) {
     const uploadFile = async (event: FormEvent) => {
         event.preventDefault();
         const file = new FormData(event.target as HTMLFormElement).get("file");
-        await HelloEndpoint.uploadAvatar("user", file as unknown as MultipartFile);
+        await HelloEndpoint.uploadAvatar("user", file as File);
         setUploadState("ok!");
     };
 
